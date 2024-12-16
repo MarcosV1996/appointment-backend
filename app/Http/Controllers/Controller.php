@@ -8,6 +8,7 @@ class Controller extends BaseController
 {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
     // Aqui você pode adicionar métodos ou propriedades, se necessário
@@ -15,4 +16,6 @@ class Controller extends BaseController
 =======
 
 >>>>>>> Atualização de Testes
+=======
+>>>>>>> Initial commit - Laravel backend
 }

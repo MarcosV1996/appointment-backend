@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-<<<<<<< HEAD
-=======
 use Illuminate\Support\Facades\Log;
+<<<<<<< HEAD
 >>>>>>> Atualização de Testes
+=======
+>>>>>>> Initial commit - Laravel backend
 
 class AuthController extends Controller
 {
@@ -17,8 +18,11 @@ class AuthController extends Controller
     {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> Atualização de Testes
+=======
+>>>>>>> Initial commit - Laravel backend
         $credentials = $request->only('username', 'password');
 
         if (Auth::attempt($credentials)) {
@@ -31,6 +35,7 @@ class AuthController extends Controller
                 'user' => $user
             ]);
         }
+<<<<<<< HEAD
 
         return response()->json(['message' => 'Credenciais inválidas'], 401);
 <<<<<<< HEAD
@@ -97,6 +102,8 @@ class AuthController extends Controller
 }
 =======
 }
+=======
+>>>>>>> Initial commit - Laravel backend
 
 >>>>>>> Initial commit - Laravel backend
 =======
@@ -144,4 +151,7 @@ public function register(Request $request)
 }
 
 }
+<<<<<<< HEAD
 >>>>>>> Atualização de Testes
+=======
+>>>>>>> Initial commit - Laravel backend

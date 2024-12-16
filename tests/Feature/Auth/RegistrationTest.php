@@ -9,7 +9,6 @@ class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
 
-<<<<<<< HEAD
     public function test_new_users_can_register(): void
     {
         $response = $this->post('/register', [
@@ -22,6 +21,7 @@ class RegistrationTest extends TestCase
         $this->assertAuthenticated();
         $response->assertNoContent();
     }
+<<<<<<< HEAD
 =======
     public function test_user_can_login_and_receive_token()
 {
@@ -48,4 +48,6 @@ class RegistrationTest extends TestCase
 }
 
 >>>>>>> Atualização de Testes
+=======
+>>>>>>> Initial commit - Laravel backend
 }

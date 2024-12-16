@@ -1,4 +1,3 @@
-
 # Backend - Sistema de Agendamento (Laravel)
 
 Este é o backend do sistema de agendamento para um albergue, desenvolvido com Laravel.

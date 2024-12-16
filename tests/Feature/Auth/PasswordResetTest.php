@@ -12,7 +12,6 @@ class PasswordResetTest extends TestCase
 {
     use RefreshDatabase;
 
-<<<<<<< HEAD
     public function test_reset_password_link_can_be_requested(): void
     {
         Notification::fake();
@@ -44,6 +43,7 @@ class PasswordResetTest extends TestCase
                 ->assertSessionHasNoErrors()
                 ->assertStatus(200);
 
+<<<<<<< HEAD
 =======
     public function test_password_can_be_reset_with_valid_token(): void
     {
@@ -67,6 +67,8 @@ class PasswordResetTest extends TestCase
     
             $response->assertStatus(200);
 >>>>>>> Atualização de Testes
+=======
+>>>>>>> Initial commit - Laravel backend
             return true;
         });
     }

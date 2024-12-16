@@ -10,18 +10,6 @@ class UserController extends Controller
 {
     public function store(Request $request)
     {
-<<<<<<< HEAD
-        // Método para criar um novo usuário (exemplo)
-    }
-
-    // Método para fazer upload de foto do usuário
-    public function uploadPhoto(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-    
-        if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
-            // Remover foto antiga, se houver
-=======
         // Validação dos dados
         $request->validate([
             'name' => 'required|string|max:255',
@@ -64,33 +52,23 @@ class UserController extends Controller
     
         if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
             // Remove a foto antiga, se existir
+<<<<<<< HEAD
 >>>>>>> Atualização de Testes
+=======
+>>>>>>> Initial commit - Laravel backend
             if ($user->photo) {
                 Storage::disk('public')->delete($user->photo);
             }
     
-<<<<<<< HEAD
-            // Salvar a nova foto
-=======
             // Salva a nova foto
+<<<<<<< HEAD
 >>>>>>> Atualização de Testes
+=======
+>>>>>>> Initial commit - Laravel backend
             $photoPath = $request->file('photo')->store('photos', 'public');
             $user->photo = $photoPath;
             $user->save();
     
-<<<<<<< HEAD
-            // Retornar o novo caminho da foto com a URL completa
-            return response()->json(['photo' => asset('storage/' . $photoPath)], 200);
-        }
-    
-        return response()->json(['message' => 'Erro ao fazer upload da foto.'], 500);
-    }
-    
-
-    
-    public function show($id)
-{
-=======
             return response()->json(['photo' => asset('storage/' . $photoPath)], 200);
         }
     
@@ -100,7 +78,10 @@ class UserController extends Controller
     
     public function show($id)
   {
+<<<<<<< HEAD
 >>>>>>> Atualização de Testes
+=======
+>>>>>>> Initial commit - Laravel backend
     $user = User::find($id);
 
     if (!$user) {
@@ -111,10 +92,6 @@ class UserController extends Controller
         'id' => $user->id,
         'username' => $user->username,
         'role' => $user->role,
-<<<<<<< HEAD
-        'photo' => $user->photo // Retorna o caminho da foto se existir
-    ]);
-=======
         'photo' => $user->photo 
     ]);
   }
@@ -164,7 +141,10 @@ public function update(Request $request, $id)
     $user->save();
 
     return response()->json(['message' => 'Usuário atualizado com sucesso!', 'user' => $user]);
+<<<<<<< HEAD
 >>>>>>> Atualização de Testes
+=======
+>>>>>>> Initial commit - Laravel backend
 }
 
 }

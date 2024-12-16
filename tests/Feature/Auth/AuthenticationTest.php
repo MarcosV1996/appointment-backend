@@ -10,27 +10,6 @@ class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
-<<<<<<< HEAD
-    public function test_users_can_authenticate_using_the_login_screen(): void
-    {
-        $user = User::factory()->create();
-
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
-
-        $this->assertAuthenticated();
-        $response->assertNoContent();
-    }
-
-    public function test_users_can_not_authenticate_with_invalid_password(): void
-    {
-        $user = User::factory()->create();
-
-        $this->post('/login', [
-            'email' => $user->email,
-=======
     public function test_user_can_login_and_receive_token()
 {
     $user = User::factory()->create([
@@ -67,7 +46,10 @@ class AuthenticationTest extends TestCase
 
         $this->post('/login', [
             'username' => 'testuser',
+<<<<<<< HEAD
 >>>>>>> Atualização de Testes
+=======
+>>>>>>> Initial commit - Laravel backend
             'password' => 'wrong-password',
         ]);
 
@@ -76,6 +58,9 @@ class AuthenticationTest extends TestCase
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Initial commit - Laravel backend
     public function test_users_can_logout(): void
     {
         $user = User::factory()->create();
@@ -85,9 +70,12 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
         $response->assertNoContent();
     }
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Atualização de Testes
+=======
+>>>>>>> Initial commit - Laravel backend
     #[Test]
     public function users_can_logout()
     {
@@ -107,7 +95,10 @@ class AuthenticationTest extends TestCase
     }
     
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> feature/TestsFeaturesAndUnit
 =======
 >>>>>>> Atualização de Testes
+=======
+>>>>>>> Initial commit - Laravel backend
 }
