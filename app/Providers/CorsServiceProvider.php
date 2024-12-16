@@ -10,7 +10,11 @@ class CorsServiceProvider extends ServiceProvider
 {
     public function boot(Router $router)
     {
+<<<<<<< HEAD
        $router->aliasMiddleware('cors', CorsMiddleware::class);
+=======
+        $router->aliasMiddleware('cors', CorsMiddleware::class);
+>>>>>>> Initial commit - Laravel backend
     }
 
     public function register()

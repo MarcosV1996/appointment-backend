@@ -29,16 +29,22 @@ class Appointment extends Model
         'isHidden',
     ];
 
+<<<<<<< HEAD
     // Relacionamento um-para-um com AdditionalInfo
     // Em app/Models/Appointment.php
 
+=======
+>>>>>>> Initial commit - Laravel backend
     public function additionalInfo()
     {
         return $this->hasOne(AdditionalInfo::class, 'appointment_id');
     }
     
+<<<<<<< HEAD
     
     // No modelo AdditionalInfo
+=======
+>>>>>>> Initial commit - Laravel backend
     public function appointment()
     {
         return $this->belongsTo(Appointment::class, 'appointment_id');

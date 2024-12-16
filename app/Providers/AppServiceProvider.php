@@ -2,8 +2,14 @@
 
 namespace App\Providers;
 
+<<<<<<< HEAD
 use Illuminate\Support\ServiceProvider; // Certifique-se de que essa linha está presente
 use Illuminate\Support\Facades\Validator;
+=======
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Log;
+
+>>>>>>> Initial commit - Laravel backend
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+<<<<<<< HEAD
         Validator::extend('cpf', function ($attribute, $value, $parameters, $validator) {
             $cpf = preg_replace('/[^0-9]/', '', $value);
 
@@ -43,5 +50,8 @@ class AppServiceProvider extends ServiceProvider
 
             return true;
         });
+=======
+      /*   Log::info('Laravel logs estão ativos'); */
+>>>>>>> Initial commit - Laravel backend
     }
 }

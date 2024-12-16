@@ -10,10 +10,14 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+<<<<<<< HEAD
             $table->string('name'); 
             $table->string('username')->unique();
             $table->string('email')->unique()->nullable(); 
             $table->timestamp('email_verified_at')->nullable(); 
+=======
+            $table->string('username')->unique();
+>>>>>>> Initial commit - Laravel backend
             $table->string('password');
             $table->enum('role', ['admin', 'employee']);
             $table->rememberToken();
@@ -21,7 +25,11 @@ return new class extends Migration
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
+<<<<<<< HEAD
             $table->string('email')->primary(); // Alterado para 'email'
+=======
+            $table->string('name')->primary();
+>>>>>>> Initial commit - Laravel backend
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });

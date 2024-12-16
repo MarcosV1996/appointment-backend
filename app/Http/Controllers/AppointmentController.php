@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\AdditionalInfo;
 use App\Models\Bed;
 use App\Http\Requests\AppointmentRequest;
+<<<<<<< HEAD
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,14 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Rules\CpfRule;
 use App\Rules\ValidCpf;
+=======
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+>>>>>>> Initial commit - Laravel backend
 
 class AppointmentController extends Controller
 {
@@ -26,6 +35,7 @@ class AppointmentController extends Controller
     public function index(): JsonResponse
     {
         $appointments = Appointment::with('additionalInfo')->get();
+<<<<<<< HEAD
         foreach ($appointments as $appointment) {
             $appointment->photo = $appointment->photo ? url(Storage::url($appointment->photo)) : null;
             if ($appointment->additionalInfo) {
@@ -143,6 +153,62 @@ class AppointmentController extends Controller
     }
 
      public function destroy($id)
+=======
+        $appointments->transform(fn($appointment) => $this->transformAppointment($appointment));
+
+        return response()->json($appointments);
+    }
+
+    public function store(AppointmentRequest $request): JsonResponse
+    {
+        DB::beginTransaction();
+        try {
+            $validated = $request->validated();
+            $validated['gender'] = $this->genderMap[$validated['gender']] ?? null;
+            $validated['date'] = $validated['arrival_date'];
+
+            if ($request->hasFile('photo')) {
+                $validated['photo'] = $this->uploadPhoto($request);
+            }
+
+            $appointment = Appointment::create($validated);
+            $this->handleAdditionalInfo($appointment, $validated['additionalInfo'] ?? null);
+
+            DB::commit();
+            return response()->json($appointment->load('additionalInfo'), 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Erro ao criar o agendamento.', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'Erro ao criar o agendamento.'], 500);
+        }
+    }
+
+    public function update(AppointmentRequest $request, Appointment $appointment): JsonResponse
+    {
+        DB::beginTransaction();
+        try {
+            $validated = $request->validated();
+            $validated['gender'] = $this->genderMap[$validated['gender']] ?? null;
+
+            if ($request->hasFile('photo')) {
+                $validated['photo'] = $this->uploadPhoto($request);
+            }
+
+            $this->releaseBed($appointment);
+            $appointment->update($validated);
+            $this->handleAdditionalInfo($appointment, $validated['additionalInfo'] ?? null);
+
+            DB::commit();
+            return response()->json($appointment->load('additionalInfo'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Erro ao atualizar o agendamento.', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'Erro ao atualizar o agendamento.'], 500);
+        }
+    }
+
+    public function destroy($id): JsonResponse
+>>>>>>> Initial commit - Laravel backend
     {
         $appointment = Appointment::find($id);
 
@@ -150,6 +216,7 @@ class AppointmentController extends Controller
             return response()->json(['message' => 'Agendamento não encontrado.'], 404);
         }
 
+<<<<<<< HEAD
         $appointment->delete();
 
         return response()->json(['message' => 'Agendamento deletado com sucesso.'], 204);
@@ -190,6 +257,30 @@ class AppointmentController extends Controller
             $appointment->isHidden = true;
             $appointment->save();
     
+=======
+        DB::beginTransaction();
+        try {
+            $this->releaseBed($appointment);
+            $appointment->delete();
+            DB::commit();
+            return response()->json(['message' => 'Agendamento excluído com sucesso.'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Erro ao excluir o agendamento.', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'Erro ao excluir o agendamento.'], 500);
+        }
+    }
+
+    public function hide($id): JsonResponse
+    {
+        $appointment = Appointment::with('additionalInfo')->findOrFail($id);
+
+        DB::beginTransaction();
+        try {
+            $appointment->isHidden = true;
+            $appointment->save();
+
+>>>>>>> Initial commit - Laravel backend
             if ($appointment->additionalInfo) {
                 $bed = Bed::find($appointment->additionalInfo->bed_id);
                 if ($bed) {
@@ -201,17 +292,26 @@ class AppointmentController extends Controller
                     'bed_id' => null
                 ]);
             }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> Initial commit - Laravel backend
             DB::commit();
             Log::info('Agendamento ocultado com sucesso.', ['appointment_id' => $id]);
             return response()->json(['message' => 'Agendamento ocultado com sucesso.'], 200);
         } catch (\Exception $e) {
             DB::rollBack();
+<<<<<<< HEAD
             Log::error('Erro ao ocultar o agendamento.', ['exception' => $e->getMessage()]);
+=======
+            Log::error('Erro ao ocultar o agendamento.', ['error' => $e->getMessage()]);
+>>>>>>> Initial commit - Laravel backend
             return response()->json(['message' => 'Erro ao ocultar o agendamento.'], 500);
         }
     }
 
+<<<<<<< HEAD
     public function getReports(Request $request)
   {
     try {
@@ -428,3 +528,140 @@ class AppointmentController extends Controller
     }
 
 }
+=======
+    public function getReports(Request $request): JsonResponse
+    {
+        try {
+            $room = $request->input('room');
+            $gender = $request->input('gender');
+            $ageGroup = $request->input('ageGroup');
+            $startDate = $request->input('startDate');
+            $endDate = $request->input('endDate');
+            $turn = $request->input('turn');
+
+            $roomMapping = ['A' => 1, 'B' => 2, 'C' => 3];
+
+            $query = Appointment::query();
+
+            if ($room && isset($roomMapping[$room])) {
+                $query->whereHas('additionalInfo', fn($q) => $q->where('room_id', $roomMapping[$room]));
+            }
+
+            if ($gender) {
+                $query->where('gender', $gender);
+            }
+
+            if ($ageGroup) {
+                $query->where(function ($q) use ($ageGroup) {
+                    if ($ageGroup === 'idosos') {
+                        $q->whereRaw("(strftime('%Y', 'now') - strftime('%Y', birth_date)) >= 60");
+                    } elseif ($ageGroup === 'adultos') {
+                        $q->whereRaw("(strftime('%Y', 'now') - strftime('%Y', birth_date)) BETWEEN 18 AND 59");
+                    }
+                });
+            }
+
+            if ($startDate && $endDate) {
+                $query->whereBetween('arrival_date', [$startDate, $endDate]);
+            }
+
+            if ($turn) {
+                $query->where(function ($q) use ($turn) {
+                    switch ($turn) {
+                        case 'manha':
+                            $q->whereBetween('time', ['06:00', '11:59']);
+                            break;
+                        case 'tarde':
+                            $q->whereBetween('time', ['12:00', '17:59']);
+                            break;
+                        case 'noite':
+                            $q->whereBetween('time', ['18:00', '23:59']);
+                            break;
+                        case 'madrugada':
+                            $q->whereBetween('time', ['00:00', '05:59']);
+                            break;
+                    }
+                });
+            }
+
+            $appointments = $query->with('additionalInfo')->get();
+
+            return response()->json([
+                'appointments' => $appointments,
+                'gender_counts' => $appointments->groupBy('gender')->map->count(),
+                'bed_counts' => $this->calculateBedCounts($appointments),
+                'age_counts' => $this->calculateAgeCounts($appointments),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Erro ao gerar relatórios.', ['error' => $e->getMessage()]);
+            return response()->json(['message' => 'Erro ao processar os relatórios.'], 500);
+        }
+    }
+
+    private function calculateBedCounts($appointments): array
+    {
+        $bedCounts = ['A' => 0, 'B' => 0, 'C' => 0];
+        foreach ($appointments as $appointment) {
+            if ($appointment->additionalInfo) {
+                $room = ['1' => 'A', '2' => 'B', '3' => 'C'][$appointment->additionalInfo->room_id] ?? null;
+                if ($room) $bedCounts[$room]++;
+            }
+        }
+        return $bedCounts;
+    }
+
+    private function calculateAgeCounts($appointments): array
+    {
+        $ageCounts = ['Idosos (60+)' => 0, 'Adultos (18-59)' => 0];
+        foreach ($appointments as $appointment) {
+            $age = $appointment->birth_date ? Carbon::parse($appointment->birth_date)->age : null;
+            if ($age >= 60) {
+                $ageCounts['Idosos (60+)']++;
+            } elseif ($age >= 18) {
+                $ageCounts['Adultos (18-59)']++;
+            }
+        }
+        return $ageCounts;
+    }
+
+    private function uploadPhoto($request): string
+    {
+        return $request->file('photo')->store('photos', 'public');
+    }
+
+    private function releaseBed(Appointment $appointment): void
+    {
+        if ($appointment->additionalInfo) {
+            $bed = Bed::find($appointment->additionalInfo->bed_id);
+            if ($bed) {
+                $bed->is_available = true;
+                $bed->save();
+            }
+        }
+    }
+
+    private function handleAdditionalInfo(Appointment $appointment, ?array $data): void
+    {
+        if ($data) {
+            $bed = Bed::find($data['bed_id']);
+            if (!$bed || !$bed->is_available) {
+                throw new \Exception('A cama selecionada não está disponível.');
+            }
+
+            $bed->is_available = false;
+            $bed->save();
+
+            AdditionalInfo::updateOrCreate(
+                ['appointment_id' => $appointment->id],
+                $data
+            );
+        }
+    }
+
+    private function transformAppointment($appointment)
+    {
+        $appointment->photo = $appointment->photo ? url(Storage::url($appointment->photo)) : null;
+        return $appointment;
+    }
+}
+>>>>>>> Initial commit - Laravel backend
