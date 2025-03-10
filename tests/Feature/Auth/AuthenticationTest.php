@@ -46,36 +46,12 @@ class AuthenticationTest extends TestCase
 
         $this->post('/login', [
             'username' => 'testuser',
-<<<<<<< HEAD
->>>>>>> Atualização de Testes
-=======
->>>>>>> Initial commit - Laravel backend
             'password' => 'wrong-password',
         ]);
 
         $this->assertGuest();
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Initial commit - Laravel backend
-    public function test_users_can_logout(): void
-    {
-        $user = User::factory()->create();
-
-        $response = $this->actingAs($user)->post('/logout');
-
-        $this->assertGuest();
-        $response->assertNoContent();
-    }
-<<<<<<< HEAD
-=======
-=======
->>>>>>> Atualização de Testes
-=======
->>>>>>> Initial commit - Laravel backend
     #[Test]
     public function users_can_logout()
     {
@@ -94,11 +70,4 @@ class AuthenticationTest extends TestCase
         $response->assertNoContent();
     }
     
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> feature/TestsFeaturesAndUnit
-=======
->>>>>>> Atualização de Testes
-=======
->>>>>>> Initial commit - Laravel backend
 }

@@ -36,10 +36,6 @@ class PasswordResetLinkController extends Controller
 
         return response()->json(['status' => __($status)]);
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Atualização de Testes
      public function sendResetLink(Request $request)
     {
         $request->validate([
@@ -52,9 +48,4 @@ class PasswordResetLinkController extends Controller
             ? response()->json(['message' => __($status)], 200)
             : response()->json(['message' => __($status)], 400);
     }
-<<<<<<< HEAD
-=======
->>>>>>> Initial commit - Laravel backend
-=======
->>>>>>> Atualização de Testes
 }

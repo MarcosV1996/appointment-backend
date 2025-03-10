@@ -52,19 +52,11 @@ class UserController extends Controller
     
         if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
             // Remove a foto antiga, se existir
-<<<<<<< HEAD
->>>>>>> Atualização de Testes
-=======
->>>>>>> Initial commit - Laravel backend
             if ($user->photo) {
                 Storage::disk('public')->delete($user->photo);
             }
     
             // Salva a nova foto
-<<<<<<< HEAD
->>>>>>> Atualização de Testes
-=======
->>>>>>> Initial commit - Laravel backend
             $photoPath = $request->file('photo')->store('photos', 'public');
             $user->photo = $photoPath;
             $user->save();
@@ -78,10 +70,6 @@ class UserController extends Controller
     
     public function show($id)
   {
-<<<<<<< HEAD
->>>>>>> Atualização de Testes
-=======
->>>>>>> Initial commit - Laravel backend
     $user = User::find($id);
 
     if (!$user) {
@@ -141,10 +129,6 @@ public function update(Request $request, $id)
     $user->save();
 
     return response()->json(['message' => 'Usuário atualizado com sucesso!', 'user' => $user]);
-<<<<<<< HEAD
->>>>>>> Atualização de Testes
-=======
->>>>>>> Initial commit - Laravel backend
 }
 
 }
