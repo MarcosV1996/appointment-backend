@@ -7,8 +7,12 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
     // Aqui você pode adicionar métodos ou propriedades, se necessário
 >>>>>>> Initial commit - Laravel backend
+=======
+
+>>>>>>> Atualização de Testes
 }

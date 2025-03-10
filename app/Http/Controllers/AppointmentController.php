@@ -7,6 +7,9 @@ use App\Models\AdditionalInfo;
 use App\Models\Bed;
 use App\Http\Requests\AppointmentRequest;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Atualização de Testes
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Rules\CpfRule;
 use App\Rules\ValidCpf;
+<<<<<<< HEAD
 =======
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +28,8 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 >>>>>>> Initial commit - Laravel backend
 
+=======
+>>>>>>> Atualização de Testes
 class AppointmentController extends Controller
 {
     protected $genderMap = [
@@ -36,6 +42,9 @@ class AppointmentController extends Controller
     {
         $appointments = Appointment::with('additionalInfo')->get();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Atualização de Testes
         foreach ($appointments as $appointment) {
             $appointment->photo = $appointment->photo ? url(Storage::url($appointment->photo)) : null;
             if ($appointment->additionalInfo) {
@@ -46,6 +55,7 @@ class AppointmentController extends Controller
     }
 
     public function store(Request $request)
+<<<<<<< HEAD
    {
     Log::info('Dados recebidos:', $request->all());
     
@@ -122,6 +132,113 @@ class AppointmentController extends Controller
         ], 500);
     }
    }
+=======
+    {
+        Log::info('Dados recebidos:', $request->all());
+        
+        $request->merge(['date' => $request->input('arrival_date')]);
+    
+        try {
+            // Converte valores booleanos antes da validação
+            $request->merge([
+                'replace' => filter_var($request->input('replace'), FILTER_VALIDATE_BOOLEAN)
+            ]);
+    
+            // Validação dos dados recebidos
+            $validatedData = $request->validate([
+                'cpf' => ['required', 'string', 'size:11', new ValidCpf()],
+                'name' => 'required',
+                'last_name' => 'required',
+                'date' => 'required|date',
+                'arrival_date' => 'required|date',
+                'time' => 'required',
+                'birth_date' => 'required|date',
+                'state' => 'required',
+                'city' => 'required',
+                'mother_name' => 'required',
+'phone' => ['nullable', 'regex:/^(\(\d{2}\)\s?)?\d{4,5}-\d{4}$/'],
+                'observation' => 'nullable',
+                'gender' => 'required',
+                'foreign_country' => 'boolean',
+                'noPhone' => 'boolean',
+                'isHidden' => 'boolean',
+                'replace' => 'boolean',
+                'showMore' => 'boolean',
+                'photo' => 'nullable|file|image|max:2048',
+                'exit_date' => 'nullable|date|after_or_equal:entry_date',
+            ]);
+    
+            // Define a data atual para 'date'
+            $validatedData['date'] = now()->format('Y-m-d');
+    
+            Log::info('Dados validados:', $validatedData);
+    
+            // Verifica se já existe um agendamento com o mesmo CPF
+            $appointment = Appointment::where('cpf', $validatedData['cpf'])->first();
+    
+            if ($appointment) {
+                if ($validatedData['replace']) {
+                    Log::info('Substituindo agendamento existente para CPF:', ['cpf' => $validatedData['cpf']]);
+    
+                    // Se uma nova foto foi enviada, atualiza; senão, mantém a antiga
+                    if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
+                        // Apaga a foto antiga (opcional)
+                        if ($appointment->photo) {
+                            Storage::disk('public')->delete($appointment->photo);
+                        }
+    
+                        // Salva a nova foto
+                        $validatedData['photo'] = $request->file('photo')->store('photos', 'public');
+                        Log::info('Nova foto salva com sucesso:', ['path' => $validatedData['photo']]);
+                    } else {
+                        // Mantém a foto antiga se nenhuma nova for enviada
+                        $validatedData['photo'] = $appointment->photo;
+                        Log::info('Nenhuma nova foto enviada. Mantendo a foto antiga:', ['photo' => $validatedData['photo']]);
+                    }
+    
+                    // Atualiza os dados do agendamento existente
+                    $appointment->update($validatedData);
+    
+                    return response()->json([
+                        'message' => 'Agendamento substituído com sucesso!',
+                        'appointment' => $appointment,
+                    ], 200);
+                } else {
+                    Log::warning('CPF já existe no banco e "replace" não foi solicitado:', ['cpf' => $validatedData['cpf']]);
+                    return response()->json([
+                        'message' => 'Já existe um agendamento com este CPF!',
+                    ], 409);
+                }
+            }
+    
+            // Lida com upload de foto se houver
+            if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
+                $validatedData['photo'] = $request->file('photo')->store('photos', 'public');
+                Log::info('Foto salva com sucesso:', ['path' => $validatedData['photo']]);
+            }
+    
+            // Cria um novo agendamento
+            $validatedData['isHidden'] = false;
+            $newAppointment = Appointment::create($validatedData);
+    
+            Log::info('Novo agendamento criado com sucesso:', $newAppointment->toArray());
+    
+            return response()->json([
+                'message' => 'Agendamento realizado com sucesso!',
+                'appointment' => $newAppointment,
+            ], 201);
+    
+        } catch (\Exception $e) {
+            Log::error('Erro ao processar o agendamento:', ['exception' => $e->getMessage()]);
+    
+            return response()->json([
+                'message' => 'Erro ao processar o agendamento.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    
+>>>>>>> Atualização de Testes
 
    public function unhide($id): JsonResponse
    {
@@ -153,6 +270,7 @@ class AppointmentController extends Controller
     }
 
      public function destroy($id)
+<<<<<<< HEAD
 =======
         $appointments->transform(fn($appointment) => $this->transformAppointment($appointment));
 
@@ -209,6 +327,8 @@ class AppointmentController extends Controller
 
     public function destroy($id): JsonResponse
 >>>>>>> Initial commit - Laravel backend
+=======
+>>>>>>> Atualização de Testes
     {
         $appointment = Appointment::find($id);
 
@@ -217,6 +337,9 @@ class AppointmentController extends Controller
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Atualização de Testes
         $appointment->delete();
 
         return response()->json(['message' => 'Agendamento deletado com sucesso.'], 204);
@@ -226,7 +349,11 @@ class AppointmentController extends Controller
     {
         $appointment = Appointment::findOrFail($id);
         Log::info('Dados recebidos no update:', $request->all());
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> Atualização de Testes
         // Atualiza os campos do agendamento
         $appointment->update($request->only([
             'name', 'last_name', 'cpf', 'gender', 'date', 'arrival_date',
@@ -236,6 +363,17 @@ class AppointmentController extends Controller
         // Verifica se additionalInfo foi enviado e atualiza
         if ($request->has('additionalInfo')) {
             $additionalInfoData = $request->input('additionalInfo');
+<<<<<<< HEAD
+=======
+    
+            // Adiciona validação para exit_date (opcional)
+            if (isset($additionalInfoData['exit_date'])) {
+                $request->validate([
+                    'additionalInfo.exit_date' => 'nullable|date|after_or_equal:arrival_date',
+                ]);
+            }
+    
+>>>>>>> Atualização de Testes
             $additionalInfo = $appointment->additionalInfo;
     
             if ($additionalInfo) {
@@ -257,6 +395,7 @@ class AppointmentController extends Controller
             $appointment->isHidden = true;
             $appointment->save();
     
+<<<<<<< HEAD
 =======
         DB::beginTransaction();
         try {
@@ -281,6 +420,8 @@ class AppointmentController extends Controller
             $appointment->save();
 
 >>>>>>> Initial commit - Laravel backend
+=======
+>>>>>>> Atualização de Testes
             if ($appointment->additionalInfo) {
                 $bed = Bed::find($appointment->additionalInfo->bed_id);
                 if ($bed) {
@@ -293,25 +434,36 @@ class AppointmentController extends Controller
                 ]);
             }
 <<<<<<< HEAD
+<<<<<<< HEAD
     
 =======
 
 >>>>>>> Initial commit - Laravel backend
+=======
+    
+>>>>>>> Atualização de Testes
             DB::commit();
             Log::info('Agendamento ocultado com sucesso.', ['appointment_id' => $id]);
             return response()->json(['message' => 'Agendamento ocultado com sucesso.'], 200);
         } catch (\Exception $e) {
             DB::rollBack();
 <<<<<<< HEAD
+<<<<<<< HEAD
             Log::error('Erro ao ocultar o agendamento.', ['exception' => $e->getMessage()]);
 =======
             Log::error('Erro ao ocultar o agendamento.', ['error' => $e->getMessage()]);
 >>>>>>> Initial commit - Laravel backend
+=======
+            Log::error('Erro ao ocultar o agendamento.', ['exception' => $e->getMessage()]);
+>>>>>>> Atualização de Testes
             return response()->json(['message' => 'Erro ao ocultar o agendamento.'], 500);
         }
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Atualização de Testes
     public function getReports(Request $request)
   {
     try {
@@ -527,6 +679,7 @@ class AppointmentController extends Controller
         return response()->json(['message' => 'Acolhimento atualizado e vaga liberada com sucesso.']);
     }
 
+<<<<<<< HEAD
 }
 =======
     public function getReports(Request $request): JsonResponse
@@ -665,3 +818,20 @@ class AppointmentController extends Controller
     }
 }
 >>>>>>> Initial commit - Laravel backend
+=======
+
+    public function getAvailableBeds()
+    {
+        // Total de camas disponíveis nos quartos (supondo que cada quarto tem 4 camas)
+        $totalBeds = \App\Models\Bed::count();
+    
+        // Contar quantas camas estão ocupadas na tabela `additional_infos`
+        $occupiedBeds = \App\Models\AdditionalInfo::whereNotNull('bed_id')->count();
+    
+        // Calcular vagas disponíveis
+        $availableBeds = $totalBeds - $occupiedBeds;
+    
+        return response()->json(['availableBeds' => $availableBeds]);
+    }
+}    
+>>>>>>> Atualização de Testes

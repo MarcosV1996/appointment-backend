@@ -10,7 +10,11 @@ class AppointmentTest extends TestCase
 {
     use RefreshDatabase; // Limpa o banco antes de cada teste
 
+<<<<<<< HEAD
     /** @test */
+=======
+    #[Test] 
+>>>>>>> Atualização de Testes
     public function it_can_fetch_appointments_from_api()
     {
         // Criar um agendamento no banco antes do teste

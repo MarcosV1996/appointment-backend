@@ -27,7 +27,11 @@ class AppointmentFeatureTest extends TestCase
             'state' => 'SP',
             'city' => 'São Paulo',
             'mother_name' => 'Maria Doe',
+<<<<<<< HEAD
             'phone' => '11999999999',
+=======
+            'phone' => '(11) 99999-9999',
+>>>>>>> Atualização de Testes
             'observation' => 'Nenhuma',
             'gender' => 'Masculino',
             'foreign_country' => false,
@@ -60,7 +64,11 @@ class AppointmentFeatureTest extends TestCase
             'state' => 'SP',
             'city' => 'São Paulo',
             'mother_name' => 'Maria Doe',
+<<<<<<< HEAD
             'phone' => '999999999',
+=======
+            'phone' => '(11) 99999-9999', 
+>>>>>>> Atualização de Testes
             'observation' => 'Nenhuma',
             'gender' => 'Masculino',
             'foreign_country' => false,
@@ -78,6 +86,7 @@ class AppointmentFeatureTest extends TestCase
 
     public function test_cannot_create_duplicate_cpf()
     {
+<<<<<<< HEAD
         // Criando um agendamento com um CPF
         $cpf = '12345678900';
         Appointment::factory()->create(['cpf' => $cpf]);
@@ -87,11 +96,20 @@ class AppointmentFeatureTest extends TestCase
             'last_name' => 'Pereira',
             'cpf' => '12345678900',
             'date' => '2025-02-03',
+=======
+        // Primeiro, cria um agendamento válido
+        $appointmentData = [
+            'name' => 'Hermano',
+            'last_name' => 'Pereira',
+            'cpf' => '12345678900', 
+            'date' => '2025-02-02',
+>>>>>>> Atualização de Testes
             'arrival_date' => '2025-02-01',
             'time' => '12:00',
             'birth_date' => '1990-01-01',
             'state' => 'SP',
             'city' => 'São Paulo',
+<<<<<<< HEAD
             'mother_name' => 'Maria Silva',
             'phone' => '999999999',
             'observation' => 'Nenhuma',
@@ -106,6 +124,28 @@ class AppointmentFeatureTest extends TestCase
         $this->assertDatabaseHas('appointments', ['cpf' => '12345678900']);
     }
 
+=======
+            'mother_name' => 'Maria Doe',
+            'phone' => '(11) 99999-9999', 
+            'observation' => 'Nenhuma',
+            'gender' => 'Masculino',
+            'foreign_country' => false,
+            'noPhone' => false,
+            'isHidden' => false,
+            'replace' => false,
+            'showMore' => false,
+            'photo' => UploadedFile::fake()->image('profile.jpg'), // Simula uma foto
+        ];
+    
+        $this->post('/api/appointments', $appointmentData);
+    
+        // Tenta criar o mesmo CPF novamente
+        $response = $this->post('/api/appointments', $appointmentData);
+    
+        $response->assertStatus(409);
+    }
+    
+>>>>>>> Atualização de Testes
     public function test_can_update_appointment()
     {
         $appointment = Appointment::factory()->create();

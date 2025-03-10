@@ -30,21 +30,29 @@ class Appointment extends Model
     ];
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     // Relacionamento um-para-um com AdditionalInfo
     // Em app/Models/Appointment.php
 
 =======
 >>>>>>> Initial commit - Laravel backend
+=======
+    // Relacionamento um-para-um com AdditionalInfo
+>>>>>>> Atualização de Testes
     public function additionalInfo()
     {
         return $this->hasOne(AdditionalInfo::class, 'appointment_id');
     }
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     
     // No modelo AdditionalInfo
 =======
 >>>>>>> Initial commit - Laravel backend
+=======
+    // No modelo AdditionalInfo
+>>>>>>> Atualização de Testes
     public function appointment()
     {
         return $this->belongsTo(Appointment::class, 'appointment_id');

@@ -31,18 +31,24 @@ class CreateAdditionalInfosTable extends Migration
             $table->string('education_level')->nullable(); // Escolaridade
             $table->string('nationality')->default('Brasileiro'); // Nacionalidade, default 'Brasileiro'
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Atualização de Testes
 
             // Duração da estadia (foi movido para cá)
             $table->integer('stay_duration')->default(1); // Duração da estadia em dias
 
             $table->timestamps();
 
+<<<<<<< HEAD
 =======
             $table->integer('stay_duration')->default(1); // Duração da estadia em dias
 
             $table->timestamps();
             
 >>>>>>> Initial commit - Laravel backend
+=======
+>>>>>>> Atualização de Testes
             // Definindo chaves estrangeiras
             $table->foreign('appointment_id')->references('id')->on('appointments')->onDelete('cascade');
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('set null');
@@ -51,9 +57,13 @@ class CreateAdditionalInfosTable extends Migration
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> Initial commit - Laravel backend
+=======
+
+>>>>>>> Atualização de Testes
     public function down()
     {
         Schema::dropIfExists('additional_infos');

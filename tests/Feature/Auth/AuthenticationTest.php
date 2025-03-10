@@ -10,6 +10,7 @@ class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
+<<<<<<< HEAD
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
         $user = User::factory()->create();
@@ -29,12 +30,51 @@ class AuthenticationTest extends TestCase
 
         $this->post('/login', [
             'email' => $user->email,
+=======
+    public function test_user_can_login_and_receive_token()
+{
+    $user = User::factory()->create([
+        'username' => 'testuser',
+        'password' => bcrypt('testpassword'),
+    ]);
+
+    $response = $this->postJson('/api/login', [
+        'username' => 'testuser',
+        'password' => 'testpassword',
+    ]);
+
+    $response->assertStatus(200)
+             ->assertJsonStructure([
+                 'message', 'token', 'user'
+             ]);
+
+    $token = $response->json('token');
+
+    // Teste com o token
+    $response = $this->getJson('/api/user', [
+        'Authorization' => 'Bearer ' . $token
+    ]);
+    $response->assertStatus(200);
+}
+
+
+    public function test_users_can_not_authenticate_with_invalid_password(): void
+    {
+        $user = User::factory()->create([
+            'username' => 'testuser',
+            'password' => bcrypt('password'),
+        ]);
+
+        $this->post('/login', [
+            'username' => 'testuser',
+>>>>>>> Atualização de Testes
             'password' => 'wrong-password',
         ]);
 
         $this->assertGuest();
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     public function test_users_can_logout(): void
     {
@@ -46,6 +86,8 @@ class AuthenticationTest extends TestCase
         $response->assertNoContent();
     }
 =======
+=======
+>>>>>>> Atualização de Testes
     #[Test]
     public function users_can_logout()
     {
@@ -64,5 +106,8 @@ class AuthenticationTest extends TestCase
         $response->assertNoContent();
     }
     
+<<<<<<< HEAD
 >>>>>>> feature/TestsFeaturesAndUnit
+=======
+>>>>>>> Atualização de Testes
 }

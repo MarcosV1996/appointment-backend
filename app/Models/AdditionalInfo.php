@@ -27,6 +27,10 @@ class AdditionalInfo extends Model
         'room_id',     
         'bed_id',
         'stay_duration',
+<<<<<<< HEAD
+=======
+        'exit_date',
+>>>>>>> Atualização de Testes
     ];
 
     public function appointment()
