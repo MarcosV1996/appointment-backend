@@ -1,0 +1,150 @@
+[90m= [39m[34;4mIlluminate\Support\Collection[39;24m {#5186
+    [34mall[39m: [
+      {#5185
+        +"[1mid[22m": [35m14[39m,
+        +"[1mmigration[22m": "[32m2024_10_10_012603_create_additional_info_table[39m",
+        +"[1mbatch[22m": [35m10[39m,
+      },
+      {#5182
+        +"[1mid[22m": [35m34[39m,
+        +"[1mmigration[22m": "[32m2024_09_09_040426_create_appointments_table[39m",
+        +"[1mbatch[22m": [35m12[39m,
+      },
+      {#5181
+        +"[1mid[22m": [35m35[39m,
+        +"[1mmigration[22m": "[32m2024_09_12_125922_update_phone_column_in_appointments_table[39m",
+        +"[1mbatch[22m": [35m12[39m,
+      },
+      {#5180
+        +"[1mid[22m": [35m36[39m,
+        +"[1mmigration[22m": "[32m2024_09_23_011731_add_gender_to_appointments_table[39m",
+        +"[1mbatch[22m": [35m12[39m,
+      },
+      {#5187
+        +"[1mid[22m": [35m37[39m,
+        +"[1mmigration[22m": "[32m2024_09_25_222124_modify_birth_date_in_appointments_table[39m",
+        +"[1mbatch[22m": [35m12[39m,
+      },
+      {#5188
+        +"[1mid[22m": [35m38[39m,
+        +"[1mmigration[22m": "[32m2024_09_26_043752_add_arrival_date_to_appointments_table[39m",
+        +"[1mbatch[22m": [35m12[39m,
+      },
+      {#5189
+        +"[1mid[22m": [35m39[39m,
+        +"[1mmigration[22m": "[32m2024_09_26_050618_drop_birth_date_from_appointments_table[39m",
+        +"[1mbatch[22m": [35m12[39m,
+      },
+      {#5190
+        +"[1mid[22m": [35m49[39m,
+        +"[1mmigration[22m": "[32m0001_01_01_000000_create_users_table[39m",
+        +"[1mbatch[22m": [35m13[39m,
+      },
+      {#5191
+        +"[1mid[22m": [35m50[39m,
+        +"[1mmigration[22m": "[32m0001_01_01_000001_create_cache_table[39m",
+        +"[1mbatch[22m": [35m13[39m,
+      },
+      {#5192
+        +"[1mid[22m": [35m51[39m,
+        +"[1mmigration[22m": "[32m0001_01_01_000002_create_jobs_table[39m",
+        +"[1mbatch[22m": [35m13[39m,
+      },
+      {#5193
+        +"[1mid[22m": [35m52[39m,
+        +"[1mmigration[22m": "[32m2024_09_03_214247_create_personal_access_tokens_table[39m",
+        +"[1mbatch[22m": [35m13[39m,
+      },
+      {#5194
+        +"[1mid[22m": [35m53[39m,
+        +"[1mmigration[22m": "[32m2024_09_05_194820_create_personal_access_tokens_table[39m",
+        +"[1mbatch[22m": [35m14[39m,
+      },
+      {#5195
+        +"[1mid[22m": [35m54[39m,
+        +"[1mmigration[22m": "[32m2024_10_10_012603_create_additional_infos_table[39m",
+        +"[1mbatch[22m": [35m14[39m,
+      },
+      {#5196
+        +"[1mid[22m": [35m55[39m,
+        +"[1mmigration[22m": "[32m2024_10_10_012604_create_beds_table[39m",
+        +"[1mbatch[22m": [35m14[39m,
+      },
+      {#5197
+        +"[1mid[22m": [35m56[39m,
+        +"[1mmigration[22m": "[32m2024_10_10_012604_create_rooms_table[39m",
+        +"[1mbatch[22m": [35m14[39m,
+      },
+      {#5198
+        +"[1mid[22m": [35m57[39m,
+        +"[1mmigration[22m": "[32m2024_10_10_195336_create_complete_appointments_table[39m",
+        +"[1mbatch[22m": [35m14[39m,
+      },
+      {#5199
+        +"[1mid[22m": [35m59[39m,
+        +"[1mmigration[22m": "[32m2024_10_11_215759_add_additional_columns_to_additional_infos_table[39m",
+        +"[1mbatch[22m": [35m15[39m,
+      },
+      {#5200
+        +"[1mid[22m": [35m60[39m,
+        +"[1mmigration[22m": "[32m2024_11_08_031141_add_unique_constraint_to_cpf_in_appointments_table[39m",
+        +"[1mbatch[22m": [35m16[39m,
+      },
+      {#5201
+        +"[1mid[22m": [35m62[39m,
+        +"[1mmigration[22m": "[32m2024_11_09_040720_add_timestamps_to_users_table[39m",
+        +"[1mbatch[22m": [35m17[39m,
+      },
+      {#5202
+        +"[1mid[22m": [35m65[39m,
+        +"[1mmigration[22m": "[32m2024_11_09_041729_add_photo_column_to_users_table[39m",
+        +"[1mbatch[22m": [35m18[39m,
+      },
+      {#5203
+        +"[1mid[22m": [35m66[39m,
+        +"[1mmigration[22m": "[32m2024_11_11_205800_add_stay_duration_to_additional_infos_table[39m",
+        +"[1mbatch[22m": [35m19[39m,
+      },
+      {#5204
+        +"[1mid[22m": [35m67[39m,
+        +"[1mmigration[22m": "[32m2024_11_12_215457_add_is_hidden_to_appointments_table[39m",
+        +"[1mbatch[22m": [35m20[39m,
+      },
+      {#5205
+        +"[1mid[22m": [35m68[39m,
+        +"[1mmigration[22m": "[32m2024_12_19_044314_alter_role_column_in_users_table[39m",
+        +"[1mbatch[22m": [35m21[39m,
+      },
+      {#5206
+        +"[1mid[22m": [35m69[39m,
+        +"[1mmigration[22m": "[32m2025_01_19_225255_add_is_hidden_to_appointments_table[39m",
+        +"[1mbatch[22m": [35m22[39m,
+      },
+      {#5207
+        +"[1mid[22m": [35m70[39m,
+        +"[1mmigration[22m": "[32m2025_02_02_162914_add_birth_date_to_appointments_table[39m",
+        +"[1mbatch[22m": [35m23[39m,
+      },
+      {#5208
+        +"[1mid[22m": [35m71[39m,
+        +"[1mmigration[22m": "[32m2025_02_02_163059_add_nophone_to_appointments_table[39m",
+        +"[1mbatch[22m": [35m23[39m,
+      },
+      {#5209
+        +"[1mid[22m": [35m72[39m,
+        +"[1mmigration[22m": "[32m2025_02_02_163206_add_replace_to_appointments_table[39m",
+        +"[1mbatch[22m": [35m23[39m,
+      },
+      {#5210
+        +"[1mid[22m": [35m73[39m,
+        +"[1mmigration[22m": "[32m2025_02_02_163310_add_showmore_to_appointments_table[39m",
+        +"[1mbatch[22m": [35m23[39m,
+      },
+      {#5211
+        +"[1mid[22m": [35m75[39m,
+        +"[1mmigration[22m": "[32m2025_02_09_020838_add_name_to_users_table[39m",
+        +"[1mbatch[22m": [35m24[39m,
+      },
+    ],
+  }
+
