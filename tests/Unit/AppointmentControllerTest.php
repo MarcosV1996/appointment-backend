@@ -50,6 +50,7 @@ class AppointmentControllerTest extends TestCase
             'replace' => false,
             'showMore' => false,
             'photo' => UploadedFile::fake()->image('photo.jpg'),
+            'accommodation_mode' => 'pernoite',
         ];
 
         $response = $this->postJson('/api/appointments', $data);
@@ -82,6 +83,7 @@ class AppointmentControllerTest extends TestCase
             'isHidden' => false,
             'replace' => false,
             'showMore' => false,
+            'accommodation_mode' => 'pernoite',
         ];
 
         $response = $this->postJson('/api/appointments', $data);

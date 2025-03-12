@@ -41,7 +41,7 @@ class AuthController extends Controller
 
 public function register(Request $request)
 {
-    Log::info('Dados recebidos para registro:', $request->all()); // Adiciona um log para ver os dados
+    Log::info('Dados recebidos para registro:', $request->all()); 
 
     $validatedData = $request->validate([
         'name' => 'required|string|max:255',
@@ -51,20 +51,19 @@ public function register(Request $request)
         'role' => 'required|string'
     ]);
 
-    // Remove qualquer tag HTML ou JS do username
     $validatedData['username'] = strip_tags($validatedData['username']);
 
     Log::info('Dados validados:', $validatedData); // Verifica se os dados foram validados corretamente
 
     $user = User::create([
         'name' => $validatedData['name'],
-        'email' => $validatedData['email'] ?? null, // Aqui verifica se o email realmente está indo
+        'email' => $validatedData['email'] ?? null, 
         'username' => $validatedData['username'],
         'password' => Hash::make($validatedData['password']),
         'role' => $validatedData['role'],
     ]);
 
-    Log::info('Usuário registrado:', $user->toArray()); // Mostra os dados do usuário salvo
+    Log::info('Usuário registrado:', $user->toArray()); 
 
     return response()->json(['message' => 'Usuário registrado com sucesso!', 'user' => $user], 201);
 }

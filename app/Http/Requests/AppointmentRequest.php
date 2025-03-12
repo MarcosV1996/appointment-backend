@@ -38,13 +38,6 @@ class AppointmentRequest extends FormRequest
                 'required',
                 Rule::in(['male', 'female', 'other'])
             ],
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-           /*  'photo' => 'sometimes|nullable|file|mimes:jpg,jpeg,png|max:2048', */
->>>>>>> Initial commit - Laravel backend
-=======
->>>>>>> Atualização de Testes
 
             'stay_duration' => 'sometimes|nullable|integer|min:1', 
         ];

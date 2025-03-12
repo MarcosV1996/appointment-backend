@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('additional_infos', function (Blueprint $table) {
-            $table->integer('stay_duration')->nullable();
-        });
+        // Verifica se a coluna não existe antes de adicionar
+        if (!Schema::hasColumn('additional_infos', 'stay_duration')) {
+            Schema::table('additional_infos', function (Blueprint $table) {
+                $table->integer('stay_duration')->nullable();
+            });
+        }
     }
     
     public function down()
@@ -22,5 +25,4 @@ return new class extends Migration
             $table->dropColumn('stay_duration');
         });
     }
-    
 };

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Rules\CpfRule;
 use App\Rules\ValidCpf;
+
 class AppointmentController extends Controller
 {
     protected $genderMap = [
@@ -24,6 +25,7 @@ class AppointmentController extends Controller
 
     public function index(): JsonResponse
     {
+     
         $appointments = Appointment::with('additionalInfo')->get();
         foreach ($appointments as $appointment) {
             $appointment->photo = $appointment->photo ? url(Storage::url($appointment->photo)) : null;
@@ -67,10 +69,10 @@ class AppointmentController extends Controller
                 'replace' => 'boolean',
                 'showMore' => 'boolean',
                 'photo' => 'nullable|file|image|max:2048',
+                'accommodation_mode' => 'required|string|in:24_horas,pernoite',
                 'exit_date' => 'nullable|date|after_or_equal:entry_date',
             ]);
     
-            // Define a data atual para 'date'
             $validatedData['date'] = now()->format('Y-m-d');
     
             Log::info('Dados validados:', $validatedData);
@@ -119,6 +121,7 @@ class AppointmentController extends Controller
                 Log::info('Foto salva com sucesso:', ['path' => $validatedData['photo']]);
             }
     
+            // Cria um novo agendamento
             $validatedData['isHidden'] = false;
             $newAppointment = Appointment::create($validatedData);
     
@@ -187,14 +190,17 @@ class AppointmentController extends Controller
         $appointment = Appointment::findOrFail($id);
         Log::info('Dados recebidos no update:', $request->all());
     
+        // Atualiza os campos do agendamento
         $appointment->update($request->only([
             'name', 'last_name', 'cpf', 'gender', 'date', 'arrival_date',
-            'phone', 'state', 'city', 'observation', 'isHidden'
+            'phone', 'state', 'city', 'observation','accommodation_mode', 'isHidden'
         ]));
     
+        // Verifica se additionalInfo foi enviado e atualiza
         if ($request->has('additionalInfo')) {
             $additionalInfoData = $request->input('additionalInfo');
     
+            // Adiciona validação para exit_date (opcional)
             if (isset($additionalInfoData['exit_date'])) {
                 $request->validate([
                     'additionalInfo.exit_date' => 'nullable|date|after_or_equal:arrival_date',
@@ -254,6 +260,7 @@ class AppointmentController extends Controller
         $endDate = $request->input('endDate');
         $turn = $request->input('turn');
 
+        // Mapeamento de "A", "B", "C" para IDs numéricos
         $roomMapping = [
             'A' => 1,
             'B' => 2,
@@ -262,6 +269,7 @@ class AppointmentController extends Controller
 
         $query = Appointment::query();
 
+        // Aplicar filtro por quarto com mapeamento
         if ($room && isset($roomMapping[$room])) {
             $roomId = $roomMapping[$room];
             $query->whereHas('additionalInfo', function ($q) use ($roomId) {
@@ -269,10 +277,12 @@ class AppointmentController extends Controller
             });
         }
 
+        // Filtro por gênero
         if ($gender) {
             $query->where('gender', $gender);
         }
 
+       // Filtro por faixa etária
         if ($ageGroup) {
             $query->where(function ($q) use ($ageGroup) {
                 switch ($ageGroup) {
@@ -332,6 +342,7 @@ class AppointmentController extends Controller
             'photo',
             'created_at',
             'updated_at',
+            'accommodation_mode',
             'isHidden'
         )->get();
 
@@ -358,6 +369,7 @@ class AppointmentController extends Controller
             }
         }
 
+        // Calcular faixas etárias
         $ageCounts = [
             'Idosos (60+)' => 0,
             'Adultos (18-59)' => 0,
@@ -390,7 +402,7 @@ class AppointmentController extends Controller
                 ];
             })->values(),
             'time_data' => $appointments->pluck('time')->filter()->toArray(),
-            'bed_counts' => $bedCounts, 
+            'bed_counts' => $bedCounts, // Inclui bed_counts na resposta
         ]);
     } catch (\Exception $e) {
         \Log::error('Erro ao gerar relatórios: ' . $e->getMessage());
@@ -429,9 +441,10 @@ class AppointmentController extends Controller
             'name' => $request->input('name'),
             'last_name' => $request->input('last_name'),
             'arrival_date' => $request->input('arrival_date'),
-            'isHidden' => false, 
+            'isHidden' => false, // Marca como visível
         ]);
     } else {
+        // Cria um novo registro
         Appointment::create($request->all());
     } 
 

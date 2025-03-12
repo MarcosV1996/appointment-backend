@@ -9,61 +9,32 @@ class CreateAdditionalInfosTable extends Migration
     public function up()
     {
         Schema::create('additional_infos', function (Blueprint $table) {
-            $table->id(); // Chave primária
-            $table->unsignedBigInteger('appointment_id'); // Chave estrangeira para appointments
-            $table->string('ethnicity')->nullable(); // Etnia
-            $table->text('addictions')->nullable(); // Vícios
-            $table->boolean('is_accompanied')->default(false); // Se está acompanhado
-            $table->text('benefits')->nullable(); // Benefícios
-            $table->boolean('is_lactating')->default(false); // Se é lactante
-            $table->boolean('has_disability')->default(false); // Se possui deficiência
+            $table->id();
+            $table->unsignedBigInteger('appointment_id'); 
+            $table->string('ethnicity')->nullable(); 
+            $table->text('addictions')->nullable(); 
+            $table->boolean('is_accompanied')->default(false); 
+            $table->text('benefits')->nullable(); 
+            $table->boolean('is_lactating')->default(false); 
+            $table->boolean('has_disability')->default(false); 
+            $table->unsignedBigInteger('room_id')->nullable(); 
+            $table->unsignedBigInteger('bed_id')->nullable(); 
+            $table->text('reason_for_accommodation')->nullable(); 
+            $table->boolean('has_religion')->default(false); 
+            $table->string('religion')->nullable(); 
+            $table->boolean('has_chronic_disease')->default(false); 
+            $table->string('chronic_disease')->nullable(); 
+            $table->string('education_level')->nullable(); 
+            $table->string('nationality')->default('Brasileiro'); 
+            $table->integer('stay_duration')->default(1); 
+            $table->timestamps(); // Definido apenas uma vez
 
-            // Colunas para room e bed
-            $table->unsignedBigInteger('room_id')->nullable(); // Chave estrangeira para rooms
-            $table->unsignedBigInteger('bed_id')->nullable(); // Chave estrangeira para beds
-
-            // Novas colunas adicionais
-            $table->text('reason_for_accommodation')->nullable(); // Motivo do acolhimento
-            $table->boolean('has_religion')->default(false); // Se possui religião
-            $table->string('religion')->nullable(); // Qual religião, se aplicável
-            $table->boolean('has_chronic_disease')->default(false); // Se possui doença crônica
-            $table->string('chronic_disease')->nullable(); // Qual doença crônica, se aplicável
-            $table->string('education_level')->nullable(); // Escolaridade
-            $table->string('nationality')->default('Brasileiro'); // Nacionalidade, default 'Brasileiro'
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Atualização de Testes
-
-            // Duração da estadia (foi movido para cá)
-            $table->integer('stay_duration')->default(1); // Duração da estadia em dias
-
-            $table->timestamps();
-
-<<<<<<< HEAD
-=======
-            $table->integer('stay_duration')->default(1); // Duração da estadia em dias
-
-            $table->timestamps();
-            
->>>>>>> Initial commit - Laravel backend
-=======
->>>>>>> Atualização de Testes
-            // Definindo chaves estrangeiras
             $table->foreign('appointment_id')->references('id')->on('appointments')->onDelete('cascade');
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('set null');
             $table->foreign('bed_id')->references('id')->on('beds')->onDelete('set null');
         });
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> Initial commit - Laravel backend
-=======
-
->>>>>>> Atualização de Testes
     public function down()
     {
         Schema::dropIfExists('additional_infos');

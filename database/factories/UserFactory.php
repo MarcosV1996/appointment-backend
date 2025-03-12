@@ -24,24 +24,16 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Atualização de Testes
+
             'name' => $this->faker->name, // Nome do usuário
             'username' => $this->faker->userName,
             'email' => $this->faker->unique()->safeEmail, // Email fictício
             'password' => bcrypt('password'), // Senha padrão
             'role' => $this->faker->randomElement(['admin', 'employee']),
-<<<<<<< HEAD
-=======
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
->>>>>>> Initial commit - Laravel backend
-=======
->>>>>>> Atualização de Testes
             'remember_token' => Str::random(10),
         ];
     }
