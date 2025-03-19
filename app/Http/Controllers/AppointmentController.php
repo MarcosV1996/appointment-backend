@@ -74,7 +74,7 @@ class AppointmentController extends Controller
             ]);
     
             $validatedData['date'] = now()->format('Y-m-d');
-    
+
             Log::info('Dados validados:', $validatedData);
     
             // Verifica se já existe um agendamento com o mesmo CPF

@@ -89,5 +89,5 @@ class AppointmentControllerTest extends TestCase
         $response = $this->postJson('/api/appointments', $data);
         
         $response->assertStatus(409);
-    }
+    } 
 }
