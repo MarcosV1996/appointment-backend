@@ -27,7 +27,8 @@ class Appointment extends Model
         'birth_date',
         'arrival_date',
         'isHidden',
-    ];
+        'accommodation_mode',
+  ];
 
     // Relacionamento um-para-um com AdditionalInfo
     public function additionalInfo()

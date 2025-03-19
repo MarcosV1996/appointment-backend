@@ -6,17 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
+    public function up()
     {
         Schema::table('appointments', function (Blueprint $table) {
-            $table->date('birth_date')->nullable(); 
+            $table->string('accommodation_mode')->after('observation')->default('pernoite');
         });
     }
-
-    public function down(): void
+    
+    public function down()
     {
         Schema::table('appointments', function (Blueprint $table) {
-            $table->dropColumn('birth_date');
+            $table->dropColumn('accommodation_mode');
         });
     }
+    
 };

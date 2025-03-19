@@ -58,7 +58,7 @@ class AppointmentController extends Controller
                 'state' => 'required',
                 'city' => 'required',
                 'mother_name' => 'required',
-'phone' => ['nullable', 'regex:/^(\(\d{2}\)\s?)?\d{4,5}-\d{4}$/'],
+                'phone' => ['nullable', 'regex:/^(\(\d{2}\)\s?)?\d{4,5}-\d{4}$/'],
                 'observation' => 'nullable',
                 'gender' => 'required',
                 'foreign_country' => 'boolean',
@@ -191,7 +191,7 @@ class AppointmentController extends Controller
         // Atualiza os campos do agendamento
         $appointment->update($request->only([
             'name', 'last_name', 'cpf', 'gender', 'date', 'arrival_date',
-            'phone', 'state', 'city', 'observation', 'isHidden'
+            'phone', 'state', 'city', 'observation','accommodation_mode', 'isHidden'
         ]));
     
         // Verifica se additionalInfo foi enviado e atualiza
@@ -340,6 +340,7 @@ class AppointmentController extends Controller
             'photo',
             'created_at',
             'updated_at',
+            'accommodation_mode',
             'isHidden'
         )->get();
 

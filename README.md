@@ -30,7 +30,3 @@ php artisan config:cache
 ###### 4. Iniciar servidor no terminal 
 
 php artisan serve
-
-
-
-

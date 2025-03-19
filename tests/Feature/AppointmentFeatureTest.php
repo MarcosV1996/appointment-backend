@@ -18,7 +18,7 @@ class AppointmentFeatureTest extends TestCase
         // Criando um agendamento antes do teste
         Appointment::factory()->create([
             'cpf' => '12345678900',
-            'name' => 'John Doe',
+            'name' => 'Marcos  Vinicius',
             'last_name' => 'Doe',
             'date' => now()->format('Y-m-d'),
             'arrival_date' => now()->format('Y-m-d'),
@@ -36,6 +36,7 @@ class AppointmentFeatureTest extends TestCase
             'replace' => false,
             'showMore' => false,
             'photo' => null,
+            'accommodation_mode' => 'pernoite',
         ]);
 
         // Chamando a API
@@ -69,12 +70,16 @@ class AppointmentFeatureTest extends TestCase
             'replace' => false,
             'showMore' => false,
             'photo' => UploadedFile::fake()->image('profile.jpg'), // Simula uma foto
+            'accommodation_mode' => 'pernoite', 
         ];
-
+    
+        dump($appointmentData); 
+    
         $response = $this->post('/api/appointments', $appointmentData);
         $response->assertStatus(201);
         $this->assertDatabaseHas('appointments', ['cpf' => '12345678900']);
     }
+    
 
     public function test_cannot_create_duplicate_cpf()
     {
@@ -99,6 +104,7 @@ class AppointmentFeatureTest extends TestCase
             'replace' => false,
             'showMore' => false,
             'photo' => UploadedFile::fake()->image('profile.jpg'), // Simula uma foto
+            'accommodation_mode' => 'pernoite',
         ];
     
         $this->post('/api/appointments', $appointmentData);

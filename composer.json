@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.2",
         "geekcom/validator-docs": "^3.10",
+        "geekcom/validator-docs": "^3.10",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
@@ -22,6 +23,9 @@
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.0",
+        "phpunit/phpunit": "^11.3",
+        "phpunit/phpunit": "^11.3",
+        "phpunit/phpunit": "^11.0.1",
         "phpunit/phpunit": "^11.3"
     },
     "autoload": {
@@ -49,6 +53,8 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi",
+            "@php -r \"file_exists('database/database_test.sqlite') || touch('database/database_test.sqlite');\"",
+            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php -r \"file_exists('database/database_test.sqlite') || touch('database/database_test.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
         ]
