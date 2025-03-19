@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Rules\CpfRule;
 use App\Rules\ValidCpf;
-
 class AppointmentController extends Controller
 {
     protected $genderMap = [
@@ -25,7 +24,6 @@ class AppointmentController extends Controller
 
     public function index(): JsonResponse
     {
-     
         $appointments = Appointment::with('additionalInfo')->get();
         foreach ($appointments as $appointment) {
             $appointment->photo = $appointment->photo ? url(Storage::url($appointment->photo)) : null;
@@ -69,12 +67,12 @@ class AppointmentController extends Controller
                 'replace' => 'boolean',
                 'showMore' => 'boolean',
                 'photo' => 'nullable|file|image|max:2048',
-                'accommodation_mode' => 'required|string|in:24_horas,pernoite',
                 'exit_date' => 'nullable|date|after_or_equal:entry_date',
             ]);
     
+            // Define a data atual para 'date'
             $validatedData['date'] = now()->format('Y-m-d');
-
+    
             Log::info('Dados validados:', $validatedData);
     
             // Verifica se já existe um agendamento com o mesmo CPF

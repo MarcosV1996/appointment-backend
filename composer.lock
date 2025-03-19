@@ -4,15 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-<<<<<<< HEAD
     "content-hash": "72e8a906ff1b8d0a52921b799d8ea5b7",
-=======
-    "content-hash": "4096e477bc2c9c66d75fab034f985143",
->>>>>>> Initial commit - Laravel backend
-=======
-    "content-hash": "72e8a906ff1b8d0a52921b799d8ea5b7",
->>>>>>> Atualização de Testes
     "packages": [
         {
             "name": "brick/math",
@@ -586,10 +578,6 @@
             "time": "2023-10-12T05:21:21+00:00"
         },
         {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Atualização de Testes
             "name": "geekcom/validator-docs",
             "version": "3.10.0",
             "source": {
@@ -651,11 +639,6 @@
             "time": "2024-03-07T16:18:50+00:00"
         },
         {
-<<<<<<< HEAD
-=======
->>>>>>> Initial commit - Laravel backend
-=======
->>>>>>> Atualização de Testes
             "name": "graham-campbell/result-type",
             "version": "v1.1.3",
             "source": {
@@ -5753,10 +5736,6 @@
             "time": "2024-08-30T16:12:47+00:00"
         },
         {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Atualização de Testes
             "name": "thiagocfn/inscricaoestadual",
             "version": "1.1.2",
             "source": {
@@ -5802,11 +5781,6 @@
             "time": "2021-03-12T00:57:51+00:00"
         },
         {
-<<<<<<< HEAD
-=======
->>>>>>> Initial commit - Laravel backend
-=======
->>>>>>> Atualização de Testes
             "name": "tijsverkoyen/css-to-inline-styles",
             "version": "v2.2.7",
             "source": {
@@ -7370,10 +7344,6 @@
         },
         {
             "name": "phpunit/phpunit",
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Atualização de Testes
             "version": "11.3.4",
             "source": {
                 "type": "git",
@@ -7384,21 +7354,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/d2ef57db1410b102b250e0cdce6675a60c2a993d",
                 "reference": "d2ef57db1410b102b250e0cdce6675a60c2a993d",
-<<<<<<< HEAD
-=======
-            "version": "11.3.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "8a4de85cc4a78c59dd31cc4ef454b0029f8440dc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/8a4de85cc4a78c59dd31cc4ef454b0029f8440dc",
-                "reference": "8a4de85cc4a78c59dd31cc4ef454b0029f8440dc",
->>>>>>> Initial commit - Laravel backend
-=======
->>>>>>> Atualização de Testes
                 "shasum": ""
             },
             "require": {
@@ -7469,15 +7424,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-<<<<<<< HEAD
-<<<<<<< HEAD
                 "source": "https://github.com/sebastianbergmann/phpunit/tree/11.3.4"
-=======
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.3.2"
->>>>>>> Initial commit - Laravel backend
-=======
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.3.4"
->>>>>>> Atualização de Testes
             },
             "funding": [
                 {
@@ -7493,15 +7440,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< HEAD
-<<<<<<< HEAD
             "time": "2024-09-09T06:08:34+00:00"
-=======
-            "time": "2024-09-03T12:00:26+00:00"
->>>>>>> Initial commit - Laravel backend
-=======
-            "time": "2024-09-09T06:08:34+00:00"
->>>>>>> Atualização de Testes
         },
         {
             "name": "sebastian/cli-parser",
