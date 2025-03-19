@@ -7435,11 +7435,6 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-<<<<<<< HEAD
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.3.4",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.3.4",
-=======
->>>>>>> develop
                 "source": "https://github.com/sebastianbergmann/phpunit/tree/11.3.2",
                 "source": "https://github.com/sebastianbergmann/phpunit/tree/11.3.4"
             },
