@@ -11,7 +11,7 @@ use Laravel\Sanctum\Sanctum;
 
 class AppointmentFeatureTest extends TestCase
 {
-    use RefreshDatabase; // Reseta o banco antes de cada teste
+    use RefreshDatabase; 
 
     public function test_can_fetch_appointments()
     {
@@ -51,8 +51,8 @@ class AppointmentFeatureTest extends TestCase
     public function test_can_create_appointment()
     {
         $appointmentData = [
-            'name' => 'Hermano',
-            'last_name' => 'Pereira',
+            'name' => 'Lulis',
+            'last_name' => 'Da silva',
             'cpf' => '12345678900',
             'date' => '2025-02-02',
             'arrival_date' => '2025-02-01',
@@ -69,7 +69,7 @@ class AppointmentFeatureTest extends TestCase
             'isHidden' => false,
             'replace' => false,
             'showMore' => false,
-            'photo' => UploadedFile::fake()->image('profile.jpg'), // Simula uma foto
+            'photo' => UploadedFile::fake()->image('profile.jpg'), 
             'accommodation_mode' => 'pernoite', 
         ];
     
@@ -85,8 +85,8 @@ class AppointmentFeatureTest extends TestCase
     {
         // Primeiro, cria um agendamento válido
         $appointmentData = [
-            'name' => 'Hermano',
-            'last_name' => 'Pereira',
+            'name' => 'Lulis',
+            'last_name' => 'Da silva',
             'cpf' => '12345678900', 
             'date' => '2025-02-02',
             'arrival_date' => '2025-02-01',
@@ -103,7 +103,7 @@ class AppointmentFeatureTest extends TestCase
             'isHidden' => false,
             'replace' => false,
             'showMore' => false,
-            'photo' => UploadedFile::fake()->image('profile.jpg'), // Simula uma foto
+            'photo' => UploadedFile::fake()->image('profile.jpg'), 
             'accommodation_mode' => 'pernoite',
         ];
     

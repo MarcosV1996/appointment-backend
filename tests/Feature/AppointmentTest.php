@@ -8,7 +8,7 @@ use App\Models\Appointment;
 
 class AppointmentTest extends TestCase
 {
-    use RefreshDatabase; // Limpa o banco antes de cada teste
+    use RefreshDatabase;
 
     /** @test */
     public function it_can_fetch_appointments_from_api()

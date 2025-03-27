@@ -8,12 +8,14 @@ use App\Models\Bed;
 use App\Http\Requests\AppointmentRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Rules\CpfRule;
 use App\Rules\ValidCpf;
+use App\Models\Report;
 class AppointmentController extends Controller
 {
     protected $genderMap = [
@@ -37,7 +39,7 @@ class AppointmentController extends Controller
     public function store(Request $request)
     {
         Log::info('Dados recebidos:', $request->all());
-        
+    
         $request->merge(['date' => $request->input('arrival_date')]);
     
         try {
@@ -121,7 +123,13 @@ class AppointmentController extends Controller
     
             // Cria um novo agendamento
             $validatedData['isHidden'] = false;
-            $newAppointment = Appointment::create($validatedData);
+    
+            // Escapar dados antes de armazenar no banco de dados
+            $escapedData = array_map(function ($value) {
+                return is_string($value) ? htmlspecialchars($value) : $value;
+            }, $validatedData);
+    
+            $newAppointment = Appointment::create($escapedData);
     
             Log::info('Novo agendamento criado com sucesso:', $newAppointment->toArray());
     
@@ -478,4 +486,82 @@ class AppointmentController extends Controller
     
         return response()->json(['availableBeds' => $availableBeds]);
     }
-}    
+
+    public function saveReport(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'type' => 'required|in:daily,weekly,monthly,custom',
+                'start_date' => 'nullable|date',
+                'end_date' => 'nullable|date|after_or_equal:start_date'
+            ]);
+    
+            // Gera os dados do relatório
+            $reportResponse = $this->getReports($request);
+            
+            if ($reportResponse->getStatusCode() !== 200) {
+                throw new \Exception("Erro ao gerar relatório: " . $reportResponse->getContent());
+            }
+    
+            $reportData = $reportResponse->getData(true);
+    
+            // Cria o resumo textual
+            $summary = $this->generateReportSummary($reportData);
+    
+            // Salva no banco de dados
+            $report = new Report();
+            $report->type = $validated['type'];
+            $report->report_date = now()->format('Y-m-d');
+            $report->data = json_encode($reportData);
+            $report->summary = $summary;
+            $report->user_id = Auth::id(); // Ou Auth::user()->id
+            $report->save();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Relatório salvo com sucesso!',
+                'report' => $report
+            ]);
+    
+        } catch (\Exception $e) {
+            \Log::error("Erro ao salvar relatório: " . $e->getMessage(), [
+                'exception' => $e,
+                'request' => $request->all()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao salvar relatório: ' . $e->getMessage(),
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    private function generateReportSummary(array $reportData): string
+    {
+        $total = count($reportData['appointments'] ?? []);
+        
+        $summary = "Relatório gerado em " . now()->format('d/m/Y H:i') . "\n";
+        $summary .= "Total de acolhidos: " . $total . "\n";
+        
+        if (isset($reportData['bed_counts'])) {
+            $summary .= "Quartos - A: {$reportData['bed_counts']['A']}, B: {$reportData['bed_counts']['B']}, C: {$reportData['bed_counts']['C']}\n";
+        }
+        
+        if (isset($reportData['gender_counts'])) {
+            $genders = array_map(function($item) {
+                return "{$item['gender']}: {$item['count']}";
+            }, $reportData['gender_counts']);
+            $summary .= "Gêneros: " . implode(', ', $genders) . "\n";
+        }
+        
+        if (isset($reportData['age_counts'])) {
+            $ages = array_map(function($item) {
+                return "{$item['group']}: {$item['count']}";
+            }, $reportData['age_counts']);
+            $summary .= "Faixa etária: " . implode(', ', $ages);
+        }
+        
+        return $summary;
+    }
+}
