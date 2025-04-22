@@ -1,0 +1,42 @@
+FROM php:8.2-fpm
+
+# Instala dependências
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    libpq-dev
+
+# Limpa cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Instala extensões PHP
+RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
+
+# Instala Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Cria diretório da aplicação
+WORKDIR /var/www
+
+# Copia arquivos do Laravel
+COPY backend/ .
+
+# Instala dependências do Laravel
+RUN composer install --no-dev --optimize-autoloader
+
+# Configura permissões
+RUN chown -R www-data:www-data /var/www/storage
+RUN chown -R www-data:www-data /var/www/bootstrap/cache
+RUN chmod -R 775 /var/www/storage
+RUN chmod -R 775 /var/www/bootstrap/cache
+
+# Expõe a porta 9000 para o PHP-FPM
+EXPOSE 9000
+
+# Comando para iniciar o servidor PHP
+CMD ["php-fpm"]

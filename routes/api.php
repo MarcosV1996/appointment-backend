@@ -140,3 +140,10 @@ Route::get('/bed-counts', [AppointmentController::class, 'getBedCounts']);
 Route::middleware('auth:sanctum')->get('/protected-route', function () {
     return response()->json(['message' => 'Acesso autorizado']);
 });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/reports', [ReportController::class, 'store']);
+    Route::post('/reports/save', [AppointmentController::class, 'saveReport']);
+
+});
+
