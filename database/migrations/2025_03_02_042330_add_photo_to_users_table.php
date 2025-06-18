@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('photo')->nullable()->after('email'); // Adiciona a coluna após o email
+            $table->string('photo')->nullable()->after('email'); 
         });
     }
 

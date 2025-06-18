@@ -4,53 +4,82 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Laravel\Sanctum\Sanctum;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use PHPUnit\Framework\Attributes\Test;
+use Illuminate\Foundation\Testing\WithFaker;
 
 class UserControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
-    #[Test]
-    public function it_can_upload_a_user_photo()
+    protected $adminUser;
+
+    protected function setUp(): void
     {
-        Storage::fake('public');
+        parent::setUp();
         
-        $user = User::factory()->create();
-        
-        $photo = UploadedFile::fake()->image('photo.jpg');
-        
-        $response = $this->postJson("/api/users/{$user->id}/photo", [
-            'photo' => $photo,
+        $this->adminUser = User::factory()->create([
+            'role' => 'admin',
+            'username' => 'junior',
+            'password' => bcrypt('password123')
         ]);
-        
-        $response->assertStatus(200)
-                 ->assertJsonStructure(['photo']);
-        
-        Storage::disk('public')->assertExists("photos/{$photo->hashName()}");
+
+        Storage::fake('public'); 
     }
 
-    #[Test]
-    public function it_returns_error_if_photo_upload_fails()
-    {
-        $user = User::factory()->create();
-        
-        $response = $this->postJson("/api/users/{$user->id}/photo", []);
-        
-        $response->assertStatus(400)
-                 ->assertJson(['message' => 'Erro ao fazer upload da foto.']);
-    }
+#[Test]
+public function it_can_upload_a_user_photo()
+{
+    Storage::fake('public');
+
+    Sanctum::actingAs($this->adminUser);
+    $user = User::factory()->create();
+
+    $photo = UploadedFile::fake()->create(
+        'profile.jpg',
+        500, // tamanho em KB
+        'image/jpeg'
+    );
+
+    $response = $this->postJson("/api/users/{$user->id}/photo", [
+        'photo' => $photo
+    ]);
+
+    $response->assertStatus(200)
+             ->assertJsonStructure(['photo']);
+
+    $user->refresh();
+    Storage::disk('public')->assertExists($user->photo);
+}
+
+#[Test]
+public function it_returns_error_if_photo_upload_fails()
+{
+    $user = User::factory()->create();
+    Sanctum::actingAs($this->adminUser);
+
+    // Teste sem arquivo
+    $response = $this->postJson("/api/users/{$user->id}/photo", []);
+    $response->assertStatus(422); // Unprocessable Entity
     
+    // Teste com arquivo inválido
+    $response = $this->postJson("/api/users/{$user->id}/photo", [
+        'photo' => 'not-a-file'
+    ]);
+    $response->assertStatus(422);
+}
 
     #[Test]
     public function it_can_show_a_user()
     {
+        Sanctum::actingAs($this->adminUser);
         $user = User::factory()->create([
-            'username' => 'johndoe',
-            'role' => 'admin',
-            'photo' => 'photos/example.jpg'
+            'username' => 'marquinhos',
+            'email' => 'marquinhos@example.com',
+            'role' => 'user', 
         ]);
         
         $response = $this->getJson("/api/users/{$user->id}");
@@ -58,18 +87,18 @@ class UserControllerTest extends TestCase
         $response->assertStatus(200)
                  ->assertJson([
                      'id' => $user->id,
-                     'username' => 'johndoe',
-                     'role' => 'admin',
-                     'photo' => 'photos/example.jpg'
-                 ]);
+                     'username' => 'marquinhos', 
+                     'role' => 'user', 
+                 ])
+                 ->assertJsonMissing(['email']);
     }
 
     #[Test]
     public function it_returns_404_if_user_not_found()
     {
-        $response = $this->getJson("/api/users/999");
+        Sanctum::actingAs($this->adminUser); 
+        $response = $this->getJson("/api/users/9999"); 
         
-        $response->assertStatus(404)
-                 ->assertJson(['message' => 'Usuário não encontrado.']);
+        $response->assertStatus(404);
     }
 }

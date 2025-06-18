@@ -9,9 +9,7 @@ class FixReportsTableStructure extends Migration
 {
     public function up()
     {
-        // Verifica se a tabela existe mas está incompleta
         if (Schema::hasTable('reports')) {
-            // Adiciona as colunas faltantes como nullable primeiro
             Schema::table('reports', function (Blueprint $table) {
                 if (!Schema::hasColumn('reports', 'type')) {
                     $table->string('type')->nullable()->after('id');
@@ -30,16 +28,14 @@ class FixReportsTableStructure extends Migration
                 }
             });
 
-            // Atualiza os registros existentes com valores padrão
             DB::table('reports')->update([
                 'type' => 'daily',
                 'report_date' => now()->toDateString(),
                 'data' => json_encode([]),
                 'summary' => 'Relatório migrado',
-                'user_id' => 1 // Use o ID de um usuário admin existente
+                'user_id' => 1 
             ]);
 
-            // Altera as colunas para NOT NULL
             Schema::table('reports', function (Blueprint $table) {
                 $table->string('type')->nullable(false)->change();
                 $table->date('report_date')->nullable(false)->change();
@@ -52,7 +48,6 @@ class FixReportsTableStructure extends Migration
 
     public function down()
     {
-        // Não remove as colunas para evitar perda de dados
         Schema::table('reports', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
         });

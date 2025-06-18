@@ -2,68 +2,83 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\User;
 use App\Models\Appointment;
-use Illuminate\Support\Facades\DB;
+use Laravel\Sanctum\Sanctum;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 
 class AppointmentXssTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_xss_protection_on_appointment_creation()
+    protected $adminUser;
+
+    protected function setUp(): void
     {
-        $maliciousCode = '<script>alert("XSS");</script>';
-        $escapedMaliciousCode = htmlspecialchars($maliciousCode, ENT_QUOTES, 'UTF-8');
-        $testDate = '2024-06-01';
-
-        $response = $this->postJson('/api/appointments', [
-            'name' => $maliciousCode,
-            'last_name' => 'lulis',
-            'cpf' => '12345678900',
-            'date' => $testDate,
-            'time' => '10:00',
-            'state' => 'DF',
-            'city' => 'Brasilia',
-            'phone' => '(11) 99999-9999',
-            'gender' => 'Masculino',
-            'arrival_date' => $testDate,
-            'observation' => 'Nenhuma',
-            'accommodation_mode' => 'pernoite',
-            'birth_date' => '1990-01-01',
-            'mother_name' => 'Maria Doe',
+        parent::setUp();
+        $this->adminUser = User::factory()->create([
+            'role' => 'admin',
+            'username' => 'admin_xss_test_feature',
+            'password' => bcrypt('password123')
         ]);
+    }
 
-        $response->assertStatus(201);
+    #[Test]
+    public function xss_protection_on_appointment_creation()
+    {
+        Sanctum::actingAs($this->adminUser);
 
-        $jsonContent = $response->getContent();
+        $xssAttempt = '<script>alert("XSS")</script>';
+        $possibleSanitized = [
+            '&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;',
+            'alert(&quot;XSS&quot;)',
+            htmlspecialchars($xssAttempt)
+        ];
 
-        $containsLt = str_contains($jsonContent, '&lt;');
-        $containsGt = str_contains($jsonContent, '&gt;');
-        $containsQuote = str_contains($jsonContent, '&quot;');
+        $appointmentData = [
+            'name' => 'Test XSS Feature',
+            'last_name' => 'User XSS Feature',
+            'cpf' => '52998224725',
+            'date' => now()->addDay()->format('Y-m-d'),
+            'arrival_date' => now()->format('Y-m-d'),
+            'time' => '10:00',
+            'birth_date' => '1990-01-01',
+            'state' => 'SP',
+            'city' => 'São Paulo',
+            'mother_name' => 'Maria Doe XSS',
+            'phone' => '11999999999', 
+            'observation' => $xssAttempt,
+            'gender' => 'male',
+            'foreign_country' => false,
+            'no_phone' => false, 
+            'is_hidden' => false, 
+            'replace' => false,   
+            'show_more' => false, 
+            'accommodation_mode' => 'pernoite',
+        ];
 
-        if (!$containsLt || !$containsGt || !$containsQuote) {
-            $containsScript = str_contains($jsonContent, '<script>');
-            $containsAlert = str_contains($jsonContent, 'alert("XSS")');
+        $response = $this->postJson('/api/appointments', $appointmentData);
+        $response->assertStatus(201)
+                 ->assertJson([
+                     'message' => 'Agendamento realizado com sucesso!'
+                 ]);
 
-            $this->assertFalse($containsScript && $containsAlert, 'Falha na proteção XSS: A resposta JSON contém dados não escapados que podem permitir a execução de scripts maliciosos.
-');
-        } else {
-            $this->assertTrue(true, 'Proteção XSS bem-sucedida');
-        }
+        $responseObservation = $response->json('appointment.observation');
+        
+        $this->assertContains(
+            $responseObservation,
+            $possibleSanitized,
+            "O campo 'Observação' foi salvo de forma insegura no sistema: {$responseObservation}"
+        );
 
-        $insertedValue = DB::table('appointments')
-            ->where('cpf', '12345678900')
-            ->value('name');
-
-        $appointment = Appointment::where('name', $escapedMaliciousCode)->first();
-
-        if ($insertedValue !== $escapedMaliciousCode) {
-            $appointment = Appointment::where('name', $maliciousCode)->first();
-            $this->assertNotNull($appointment, 'Falha na proteção XSS: HTML original encontrado no banco de dados');
-        } else {
-            $this->assertNotNull($appointment, 'Falha na proteção XSS: O banco de dados não contém o HTML escapado esperado. O valor armazenado não foi devidamente protegido contra ataques XSS.
-');
-        }
+        // Verificação no banco de dados
+        $dbObservation = Appointment::first()->observation;
+        $this->assertContains(
+            $dbObservation,
+            $possibleSanitized,
+            "A observação no banco não foi sanitizada corretamente. Recebido: {$dbObservation}"
+        );
     }
 }

@@ -15,11 +15,16 @@ return [
     |
     */
 
-    'stateful' => explode(',', env(
+   /*  'stateful' => explode(',', env(
             'SANCTUM_STATEFUL_DOMAINS',
-            'http://localhost,127.0.0.1'
+            'localhost,localhost:8080'
     )),
-    /*
+ */
+'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
+    '%s%s',
+    'localhost,localhost:8000,localhost:8080,127.0.0.1,127.0.0.1:8000,::1',
+    env('APP_URL') ? ','.parse_url(env('APP_URL'), PHP_URL_HOST) : ''
+))),    /*
     |--------------------------------------------------------------------------
     | Sanctum Guards
     |--------------------------------------------------------------------------

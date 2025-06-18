@@ -9,14 +9,14 @@ return new class extends Migration
     public function up()
     {
         Schema::table('additional_infos', function (Blueprint $table) {
-            $table->date('exit_date')->nullable()->after('stay_duration'); // Adiciona o campo
+            $table->date('exit_date')->nullable()->after('stay_duration'); 
         });
     }
     
     public function down()
     {
         Schema::table('additional_infos', function (Blueprint $table) {
-            $table->dropColumn('exit_date'); // Remove o campo caso a migration seja revertida
+            $table->dropColumn('exit_date'); 
         });
     }
     

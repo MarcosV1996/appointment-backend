@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
         Schema::create('appointments', function (Blueprint $table) {
@@ -26,7 +23,6 @@ return new class extends Migration
 
             $table->string('phone')->nullable();
 
-            // Colunas adicionais
             $table->boolean('foreign_country')->default(false); 
             $table->boolean('no_phone')->default(false); 
             $table->string('gender')->nullable(); 
@@ -38,9 +34,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down()
     {
         Schema::dropIfExists('appointments');

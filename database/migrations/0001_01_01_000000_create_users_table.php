@@ -8,7 +8,6 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Criando a tabela 'users'
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name'); 
@@ -21,14 +20,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Criando a tabela 'password_reset_tokens' corretamente
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary(); 
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
 
-        // Criando a tabela 'sessions'
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->foreignId('user_id')->nullable()->index();
@@ -41,7 +38,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        // Removendo as tabelas na reversão das migrações
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');

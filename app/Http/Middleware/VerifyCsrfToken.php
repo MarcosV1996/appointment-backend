@@ -12,10 +12,26 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        'api/*',
-        'login',
-        'sub.domain.zone' => [
-          'prefix/*'
-        ],
+        'api/*', 
     ];
+    
+    protected function tokensMatch($request)
+    {
+        $token = $this->getTokenFromRequest($request);
+        
+        return is_string($request->session()->token()) &&
+               is_string($token) &&
+               hash_equals($request->session()->token(), $token);
+    }
+
+    protected function getTokenFromRequest($request)
+    {
+        $token = $request->input('_token') ?: $request->header('X-CSRF-TOKEN');
+
+        if (!$token && $header = $request->header('X-XSRF-TOKEN')) {
+            $token = $this->encrypter->decrypt($header);
+        }
+
+        return $token;
+    }
 }

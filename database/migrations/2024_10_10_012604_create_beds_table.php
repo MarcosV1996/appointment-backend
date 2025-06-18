@@ -9,13 +9,12 @@ class CreateBedsTable extends Migration
     public function up()
     {
         Schema::create('beds', function (Blueprint $table) {
-            $table->id(); // Chave primária
-            $table->unsignedBigInteger('room_id'); // Chave estrangeira para rooms
-            $table->string('bed_number'); // Número da cama no quarto (Ex: Bed 1)
-            $table->boolean('is_available')->default(true); // Se a cama está disponível ou não
+            $table->id();
+            $table->unsignedBigInteger('room_id'); 
+            $table->string('bed_number'); 
+            $table->boolean('is_available')->default(true); 
             $table->timestamps();
 
-            // Chave estrangeira para rooms
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
         });
     }

@@ -6,18 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
         if (!Schema::hasTable('reports')) {
             Schema::create('reports', function (Blueprint $table) {
                 $table->id();
-                $table->string('type')->default('daily'); // Valor padrão adicionado
-                $table->date('report_date')->default(now()); // Valor padrão adicionado
-                $table->json('data')->nullable(); // Permite nulo inicialmente
-                $table->text('summary')->nullable(); // Permite nulo inicialmente
+                $table->string('type')->default('daily'); 
+                $table->date('report_date')->default(now()); 
+                $table->json('data')->nullable();
+                $table->text('summary')->nullable();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
                 $table->timestamps();
             });

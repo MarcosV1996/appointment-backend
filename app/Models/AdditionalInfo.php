@@ -35,13 +35,11 @@ class AdditionalInfo extends Model
         return $this->belongsTo(Appointment::class);
     }
 
-    // Relacionamento com Room
     public function room()
     {
         return $this->belongsTo(Room::class);
     }
 
-    // Relacionamento com Bed
     public function bed()
     {
         return $this->belongsTo(Bed::class);

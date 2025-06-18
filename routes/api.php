@@ -1,149 +1,131 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
-use App\Models\User;
 
-// =============================
-// Rotas de Autenticação
-// =============================
-
-// Login e Registro
-Route::middleware([EnsureFrontendRequestsAreStateful::class])->post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
-
-// Logout
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
-
-// Usuário autenticado
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-// =============================
-// Rotas de Recuperação de Senha
-// =============================
-
-// Enviar e-mail com link de recuperação de senha
-Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
-
-// Redefinir senha ao clicar no link do e-mail
-Route::post('/reset-password', [ResetPasswordController::class, 'reset']);
-
-// **Alternativa Manual de Solicitação de Redefinição de Senha**
-Route::post('/forgot-password', function (Request $request) {
-    $request->validate(['email' => 'required']);
-
-    $user = User::where('email', $request->email)->firstOrFail();
-    Password::sendResetLink(['email' => $user->email]);
-
-    return response()->json(['message' => 'Link de redefinição de senha enviado.'], 200);
-});
-
-// **Alternativa Manual para Redefinir Senha**
-Route::post('/reset-password', function (Request $request) {
-    $request->validate([
-        'email' => 'required',
-        'token' => 'required',
-        'password' => 'required|min:8|confirmed',
-    ]);
-
-    $user = User::where('email', $request->email)->firstOrFail();
-
-    $status = Password::reset(
-        [
-            'email' => $user->email,
-            'password' => $request->password,
-            'password_confirmation' => $request->password_confirmation,
-            'token' => $request->token,
-        ],
-        function ($user, $password) {
-            $user->forceFill(['password' => Hash::make($password)])->save();
-        }
-    );
-
-    return $status === Password::PASSWORD_RESET
-        ? response()->json(['message' => 'Senha redefinida com sucesso.'], 200)
-        : response()->json(['message' => 'Erro ao redefinir senha.'], 500);
-})->name('password.update');
-
-// =============================
-// Rotas de Usuários
-// =============================
-
-// Listar todos os usuários
-Route::get('/users', [UserController::class, 'index']);
-
-// Exibir usuário específico
-Route::get('/users/{id}', [UserController::class, 'show']);
-
-// Atualizar usuário
-Route::put('/users/{id}', [UserController::class, 'update']);
-
-// Excluir usuário
-Route::delete('/users/{id}', [UserController::class, 'destroy']);
-
-// Upload de foto do usuário
-Route::post('/users/{id}/upload-photo', [UserController::class, 'uploadPhoto']);
-Route::post('/users/{id}/photo', [UserController::class, 'uploadPhoto']);
-
-// =============================
-// Rotas de Agendamentos
-// =============================
-
-// Listar agendamentos
-Route::get('/appointments', [AppointmentController::class, 'index']);
-
-// Exibir detalhes de um agendamento
-Route::get('/appointments/{id}', [AppointmentController::class, 'show']);
-
-// Criar agendamento
-Route::post('/appointments', [AppointmentController::class, 'store']);
-
-// Atualizar agendamento
-Route::put('/appointments/{appointment}', [AppointmentController::class, 'update']);
-
-// Excluir agendamento
-Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
-
-// Ocultar agendamento
-Route::put('/appointments/{id}/hide', [AppointmentController::class, 'hide']);
-
-// =============================
-// Rotas de Camas Disponíveis
-// =============================
-
-Route::get('/available-beds', [AppointmentController::class, 'getAvailableBeds']);
 Route::get('/appointments/available-beds', [AppointmentController::class, 'getAvailableBeds']);
 
-// =============================
-// Rotas de Relatórios
-// =============================
+Route::options('/{any}', function () {
+    return response()->noContent();
+})->where('any', '.*');
 
-Route::get('/reports', [AppointmentController::class, 'getReports']);
 
-// Contagem de camas
-Route::get('/bed-counts', [AppointmentController::class, 'getBedCounts']);
+Route::group(['middleware' => ['api']], function () {
+    // CSRF Cookie Endpoint - MANTIDO AQUI porque o frontend o chama com /api/.
+    Route::get('/sanctum/csrf-cookie', function (Request $request) {
+        return response()->noContent()
+            ->withCookie(
+                'XSRF-TOKEN',
+                csrf_token(),
+                config('session.lifetime'),
+                '/',
+                null,
+                config('session.secure'),
+                false
+            );
+    });
 
-// =============================
-// Rotas Protegidas (Requer Autenticação)
-// =============================
+    // Login e Registro para estarem sob o middleware 'api' 
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+    
+    // Rotas de recuperação de senha (públicas)
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
+    Route::post('/reset-password', [ResetPasswordController::class, 'reset']);
 
-Route::middleware('auth:sanctum')->get('/protected-route', function () {
-    return response()->json(['message' => 'Acesso autorizado']);
+    // Rotas públicas de agendamentos
+    Route::get('/available-beds', [AppointmentController::class, 'getAvailableBeds']);
+    Route::post('/appointments', [AppointmentController::class, 'store'])
+        ->middleware(['throttle:5,1']);
+});
+// =================================================================================
+
+
+// === ROTAS AUTENTICADAS PELO LARAVEL SANCTUM ===
+// Este grupo de middleware garante que o usuário esteja logado via Sanctum.
+Route::middleware([
+    'auth:sanctum', // Middleware de autenticação do Sanctum
+    'throttle:60,1' // Limitação de taxa para usuários autenticados
+])->group(function () {
+    // Rota para o usuário autenticado atual
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+    
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    // Grupo de rotas para recursos de usuários (prefixadas com 'users')
+    Route::prefix('users')->group(function () {
+        Route::post('/', [UserController::class, 'store'])->middleware('can:create-users'); 
+        Route::get('/', [UserController::class, 'index'])->middleware('can:view-users');
+        Route::get('/{user}', [UserController::class, 'show'])->middleware('can:view-users');
+        Route::put('/{user}', [UserController::class, 'update'])->middleware('can:update-users');
+        Route::delete('/{user}', [UserController::class, 'destroy'])
+            ->middleware('can:delete-users'); 
+            
+        Route::post('/{user}/photo', [UserController::class, 'uploadPhoto'])
+            ->name('users.photo.upload');
+        Route::get('/{user}/photo', function ($userId) {
+            $user = \App\Models\User::findOrFail($userId);
+            if (!$user->photo) {
+                abort(404, 'Foto não encontrada');
+            }
+            $path = storage_path('app/public/' . $user->photo);
+            if (!file_exists($path)) {
+                abort(404);
+            }
+            return response()->file($path);
+        })->name('users.photo.show');
+    });
+
+    Route::prefix('appointments')->group(function () {
+        Route::get('/', [AppointmentController::class, 'index']);
+        Route::get('/{id}', [AppointmentController::class, 'show']); 
+        Route::post('/', [AppointmentController::class, 'store']); 
+        Route::put('/{appointment}', [AppointmentController::class, 'update']);
+        Route::delete('/{id}', [AppointmentController::class, 'destroy']);
+        Route::put('/{id}/hide', [AppointmentController::class, 'hide']);
+    });
+
+    Route::prefix('reports')->group(function () {
+        Route::get('/', [AppointmentController::class, 'getReports']); 
+        Route::get('/bed-counts', [AppointmentController::class, 'getBedCounts']); 
+        Route::post('/save', [AppointmentController::class, 'saveReport']); 
+    });
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/reports', [ReportController::class, 'store']);
-    Route::post('/reports/save', [AppointmentController::class, 'saveReport']);
 
-});
+Route::get('/email/verify/{id}/{hash}', function (Request $request) {
+    if (!$request->hasValidSignature()) {
+        abort(403, 'Invalid verification link');
+    }
 
+    $user = \App\Models\User::find($request->route('id')); 
+    if (!$user || !hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
+        abort(403, 'Invalid verification link');
+    }
+
+    if ($user->hasVerifiedEmail()) {
+        return redirect(env('FRONTEND_URL', 'http://localhost:8080') . '/login?verified=1');
+    }
+
+    $user->markEmailAsVerified();
+    
+    return redirect(env('FRONTEND_URL', 'http://localhost:8080') . '/login?verified=1');
+})->middleware(['auth:sanctum', 'signed'])->name('verification.verify');
+
+
+Route::get('/storage/{path}', function ($path) {
+    $fullPath = storage_path('app/public/' . $path);
+    
+    if (!file_exists($fullPath)) {
+        abort(404);
+    }
+    
+    return response()->file($fullPath);
+})->where('path', '.*');

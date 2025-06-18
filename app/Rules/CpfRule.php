@@ -8,10 +8,8 @@ class CpfRule implements Rule
 {
     public function passes($attribute, $value)
     {
-        // Remove caracteres não numéricos
         $cpf = preg_replace('/[^0-9]/', '', $value);
 
-        // Verifica se o CPF tem 11 dígitos
         if (strlen($cpf) !== 11) {
             return false;
         }

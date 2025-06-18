@@ -30,13 +30,11 @@ class Appointment extends Model
         'accommodation_mode',
   ];
 
-    // Relacionamento um-para-um com AdditionalInfo
     public function additionalInfo()
     {
         return $this->hasOne(AdditionalInfo::class, 'appointment_id');
     }
     
-    // No modelo AdditionalInfo
     public function appointment()
     {
         return $this->belongsTo(Appointment::class, 'appointment_id');

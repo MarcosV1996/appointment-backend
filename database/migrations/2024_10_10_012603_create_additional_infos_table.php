@@ -27,7 +27,7 @@ class CreateAdditionalInfosTable extends Migration
             $table->string('education_level')->nullable(); 
             $table->string('nationality')->default('Brasileiro'); 
             $table->integer('stay_duration')->default(1); 
-            $table->timestamps(); // Definido apenas uma vez
+            $table->timestamps();
 
             $table->foreign('appointment_id')->references('id')->on('appointments')->onDelete('cascade');
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('set null');
